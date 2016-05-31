@@ -1,0 +1,19 @@
+{
+  "name": "jonfon",
+  "version": "1.0.1",
+  "description": "Some module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iceonepiece/jonfon.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iceonepiece/jonfon/issues"
+  },
+  "homepage": "https://github.com/iceonepiece/jonfon#readme"
+}

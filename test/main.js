@@ -54,6 +54,26 @@ describe('<< Engine Class >>', function(){
     expect(model.recommendations()).to.deep.equal([]);
   });
 
+  it('getStrategies()', function(){
+
+    var engine = new Engine();
+
+    var strategies = engine.getStrategies();
+    expect(strategies).to.deep.equal({});
+
+    engine.addStrategy('first', new Strategy());
+
+    var strategyNames = Object.keys( engine.getStrategies() );
+
+    expect(strategyNames.length).to.deep.equal(1);
+
+    engine.addStrategy('second', new Strategy());
+    engine.addStrategy('third', new Strategy());
+    strategyNames = Object.keys( engine.getStrategies() );
+    expect(strategyNames.length).to.deep.equal(3);
+
+  });
+
   it('addStrategy() and getStrategy()', function(){
 
     var engine = new Engine();
@@ -67,7 +87,7 @@ describe('<< Engine Class >>', function(){
 
     var engine = new Engine();
 
-    expect(engine.getInputData('sampleData')).to.deep.equal(undefined);
+    expect(engine.getModel('sampleData')).to.deep.equal(undefined);
     
     engine.addModel('sampleData', []);
     var model = engine.getModel('sampleData');

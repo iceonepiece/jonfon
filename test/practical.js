@@ -6,11 +6,10 @@ var Strategy = jonfon.Strategy;
 
 describe('<< Practical >>', function(){
 
-  it('simple approach', function(){
+  var engine = new Engine();
+  engine.addStrategy('simple', new Strategy('simple'));
 
-    var engine = new Engine();
-    
-    engine.addStrategy('simple', new Strategy('simple'));
+  it('simple approach', function(){
     
     var userLabels = ['Alice', 'User1', 'User2', 'User3', 'User4'];
     var itemLabels = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5'];
@@ -39,6 +38,73 @@ describe('<< Practical >>', function(){
 
     expect(recsOfAlice).to.deep.equal([
       { item: 'Item5', score: 4.8720 }
+    ]);
+
+  });
+
+  
+  it('simple approach with rank items', function(){
+
+    var userLabels = ['Lisa Rose', 'Gene Seymour', 'Michael Phillips', 
+                      'Claudia Puig', 'Mick LaSalle', 'Jack Matthews', 'Toby' ];
+    var itemLabels = ['Lady in the Water', 'Snakes on a Plane', 'Just My Luck', 
+                      'Superman Returns', 'You, Me and Dupree', 'The Night Listener'];
+
+    var ratingMatrix =  [
+      [   2.5,  3.5,  3.0,  3.5,  2.5,  3.0  ],
+      [   3.0,  3.5,  1.5,  5.0,  3.5,  3.0  ],
+      [   2.5,  3.0, null,  3.5, null,  4.0  ],
+      [  null,  3.5,  3.0,  4.0,  2.5,  4.5  ],
+      [   3.0,  4.0,  2.0,  3.0,  2.0,  3.0  ],
+      [   3.0,  4.0, null,  5.0,  3.5,  3.0  ],
+      [  null,  4.5, null,  4.0,  1.0, null  ]
+    ];
+
+    engine.addModel('one', ratingMatrix, userLabels, itemLabels);
+
+    engine.process('simple', 'one');
+
+    var model = engine.getModel('one');
+
+    var twoNeighborsOfToby = model.neighbors('Toby', 2);
+    var threeNeighborsOfToby = model.neighbors('Toby', 3);
+    var fourNeighborsOfToby = model.neighbors('Toby', 4);
+
+    var oneRecsOfToby = model.recommendations('Toby', 1);
+    var twoRecsOfToby = model.recommendations('Toby', 2);
+    var threeRecsOfToby = model.recommendations('Toby', 3);
+
+    expect(twoNeighborsOfToby).to.deep.equal([ 
+      { user: 'Lisa Rose', similarity: 0.9912 },
+      { user: 'Mick LaSalle', similarity: 0.9245 }
+    ]);
+
+    expect(threeNeighborsOfToby).to.deep.equal([ 
+      { user: 'Lisa Rose', similarity: 0.9912 },
+      { user: 'Mick LaSalle', similarity: 0.9245 },
+      { user: 'Claudia Puig', similarity: 0.8934 }
+    ]);
+
+    expect(fourNeighborsOfToby).to.deep.equal([ 
+      { user: 'Lisa Rose', similarity: 0.9912 },
+      { user: 'Mick LaSalle', similarity: 0.9245 },
+      { user: 'Claudia Puig', similarity: 0.8934 },
+      { user: 'Jack Matthews', similarity: 0.6628 }
+    ]);
+
+    expect(oneRecsOfToby).to.deep.equal([
+      { item: 'The Night Listener', score: 3.2934 }
+    ]);
+
+    expect(twoRecsOfToby).to.deep.equal([
+      { item: 'The Night Listener', score: 3.2934 },
+      { item: 'Lady in the Water', score: 2.8623 }
+    ]);
+
+    expect(threeRecsOfToby).to.deep.equal([
+      { item: 'The Night Listener', score: 3.2934 },
+      { item: 'Lady in the Water', score: 2.8623 },
+      { item: 'Just My Luck', score: 2.5761 }
     ]);
 
   });

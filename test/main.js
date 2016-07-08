@@ -54,6 +54,16 @@ describe('<< Engine Class >>', function(){
     expect(model.recommendations()).to.deep.equal([]);
   });
 
+  it('getTemplates()', function(){
+
+    var engine = new Engine();
+    var templates = engine.getTemplates();
+
+    expect(templates)
+    .to.deep.equal(['simple']);
+
+  });
+
   it('getStrategies()', function(){
 
     var engine = new Engine();

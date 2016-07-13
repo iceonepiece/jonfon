@@ -7,6 +7,8 @@ var Strategy = jonfon.Strategy;
 
 describe('<< Engine Class >>', function(){
 
+  var approach = 'UserKNN';
+
   it('new Engine()', function(){
 
     var engine = new Engine();
@@ -39,11 +41,11 @@ describe('<< Engine Class >>', function(){
     engine.process('simple', 'sampleData');
   });
 
-  it('process() - simple approach', function(){
+  it('process() - UserKNN approach', function(){
 
     var engine = new Engine();
 
-    engine.addStrategy('simple', new Strategy('simple'));
+    engine.addStrategy('simple', new Strategy(approach));
     engine.addModel('sampleData', []);
 
     engine.process('simple', 'sampleData');
@@ -60,7 +62,7 @@ describe('<< Engine Class >>', function(){
     var templates = engine.getTemplates();
 
     expect(templates)
-    .to.deep.equal(['simple']);
+    .to.deep.equal(['UserKNN', 'SVD']);
 
   });
 

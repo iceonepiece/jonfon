@@ -7,7 +7,9 @@ var Strategy = jonfon.Strategy;
 describe('<< Practical >>', function(){
 
   var engine = new Engine();
-  engine.addStrategy('simple', new Strategy('simple'));
+  var approach = 'UserKNN';
+  
+  engine.addStrategy(approach, new Strategy(approach));
 
   it('simple approach', function(){
     
@@ -24,7 +26,7 @@ describe('<< Practical >>', function(){
 
     engine.addModel('one', ratingMatrix, userLabels, itemLabels);
 
-    engine.process('simple', 'one');
+    engine.process(approach, 'one');
 
     var model = engine.getModel('one');
 
@@ -62,9 +64,12 @@ describe('<< Practical >>', function(){
 
     engine.addModel('one', ratingMatrix, userLabels, itemLabels);
 
-    engine.process('simple', 'one');
+    engine.process(approach, 'one');
 
     var model = engine.getModel('one');
+
+    console.log('model.recommendations');
+    console.log(model.recommendations());
 
     var twoNeighborsOfToby = model.neighbors('Toby', 2);
     var threeNeighborsOfToby = model.neighbors('Toby', 3);

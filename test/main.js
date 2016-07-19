@@ -62,7 +62,7 @@ describe('<< Engine Class >>', function(){
     var templates = engine.getTemplates();
 
     expect(templates)
-    .to.deep.equal(['UserKNN', 'SVD']);
+    .to.deep.equal(['UserKNN', 'UserKNN-Jaccard', 'SVD']);
 
   });
 

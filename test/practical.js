@@ -8,10 +8,12 @@ describe('<< Practical >>', function(){
 
   var engine = new Engine();
   var approach = 'UserKNN';
+  var approachJaccard = 'UserKNN-Jaccard';
   
   engine.addStrategy(approach, new Strategy(approach));
+  engine.addStrategy(approachJaccard, new Strategy(approachJaccard));
 
-  it('simple approach', function(){
+  it('UserKNN approach', function(){
     
     var userLabels = ['Alice', 'User1', 'User2', 'User3', 'User4'];
     var itemLabels = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5'];
@@ -45,7 +47,7 @@ describe('<< Practical >>', function(){
   });
 
   
-  it('simple approach with rank items', function(){
+  it('UserKNN approach with rank items', function(){
 
     var userLabels = ['Lisa Rose', 'Gene Seymour', 'Michael Phillips', 
                       'Claudia Puig', 'Mick LaSalle', 'Jack Matthews', 'Toby' ];

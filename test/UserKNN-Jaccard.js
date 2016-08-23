@@ -26,7 +26,11 @@ describe('<< Practical >>', function(){
 
     engine.addModel('jaccard', ratingMatrix, userLabels, itemLabels);
 
-    engine.process(approach, 'jaccard');
+    var options = {
+      threshold: 0.1
+    };
+
+    engine.process(approach, 'jaccard', options);
 
     var model = engine.getModel('jaccard');
 
@@ -44,7 +48,7 @@ describe('<< Practical >>', function(){
       { item: 'Item1', score: 0.4583 },
       { item: 'Item5', score: 0.25 }
     ]);
- 
+
   });
 
 });

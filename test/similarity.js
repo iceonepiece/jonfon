@@ -5,24 +5,14 @@ var similarity = jonfon.similarity;
 
 describe('<< Similarity algorithms >>', function(){
 
-  var ratingPrefs = [
-      [ 5, 3, 4, 4 ],
-      [ 3, 1, 2, 3 ],
-      [ 4, 3, 4, 3 ],
-      [ 3, 3, 1, 5 ],
-      [ 1, 5, 5, 2 ]
-    ];
-
-  var binaryPrefs = [
-      [ 0, 0, 0, 0, 0 ],
-      [ 1, 0, 0, 0, 0 ],
-      [ 0, 1, 1, 1, 0 ],
-      [ 0, 0, 0, 0, 1 ],
-      [ 1, 1, 1, 1, 1 ],
-      [ 1, 1, 0, 0, 0 ]
-    ];
-
   it('pearson()', function(){
+    var ratingPrefs = [
+        [ 5, 3, 4, 4 ],
+        [ 3, 1, 2, 3 ],
+        [ 4, 3, 4, 3 ],
+        [ 3, 3, 1, 5 ],
+        [ 1, 5, 5, 2 ]
+      ];
 
     expect(similarity.pearson(ratingPrefs, 0, 1)).to.equal(0.8528);
     expect(similarity.pearson(ratingPrefs, 0, 2)).to.equal(0.7071);
@@ -31,6 +21,15 @@ describe('<< Similarity algorithms >>', function(){
   });
 
   it('jaccard()', function(){
+
+    var binaryPrefs = [
+        [ 0, 0, 0, 0, 0 ],
+        [ 1, 0, 0, 0, 0 ],
+        [ 0, 1, 1, 1, 0 ],
+        [ 0, 0, 0, 0, 1 ],
+        [ 1, 1, 1, 1, 1 ],
+        [ 1, 1, 0, 0, 0 ]
+      ];
 
     expect(similarity.jaccard(binaryPrefs, 0, 0)).to.equal(0);
     expect(similarity.jaccard(binaryPrefs, 0, 1)).to.equal(0);
@@ -41,5 +40,21 @@ describe('<< Similarity algorithms >>', function(){
     expect(similarity.jaccard(binaryPrefs, 3, 4)).to.equal(0.2);
   });
 
+  it('newJaccard()', function(){
+    var testPrefs = [
+      [ 1, 0, 1 ],
+      [ 1, 0, 2 ],
+      [ 1, 0, 1 ],
+      [ 0, 1, 0 ],
+      [ 1, 1, 1 ],
+      [ 2, 2, 2 ]
+    ];
+
+    expect(similarity.newJaccard(testPrefs, 0, 1)).to.equal(0.75);
+    expect(similarity.newJaccard(testPrefs, 0, 2)).to.equal(1);
+    expect(similarity.newJaccard(testPrefs, 0, 3)).to.equal(0);
+    expect(similarity.newJaccard(testPrefs, 0, 4)).to.equal(0.6667);
+    expect(similarity.newJaccard(testPrefs, 4, 5)).to.equal(0.5);
+  });
 
 });

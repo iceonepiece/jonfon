@@ -1,6 +1,6 @@
 {
   "name": "jonfon",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "A Very Good Recommendation Engine",
   "main": "index.js",
   "scripts": {

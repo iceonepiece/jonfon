@@ -8,13 +8,13 @@ describe('<< Practical >>', function(){
 
   var engine = new Engine();
   var approach = 'UserKNN';
-  var approachJaccard = 'UserKNN-Jaccard';
-  
+  var approachJaccard = 'UserKNN_Jaccard';
+
   engine.addStrategy(approach, new Strategy(approach));
   engine.addStrategy(approachJaccard, new Strategy(approachJaccard));
 
   it('UserKNN approach', function(){
-    
+
     var userLabels = ['Alice', 'User1', 'User2', 'User3', 'User4'];
     var itemLabels = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5'];
 
@@ -35,9 +35,9 @@ describe('<< Practical >>', function(){
     var neighborsOfAlice = model.neighbors('Alice');
     var recsOfAlice = model.recommendations('Alice');
 
-    expect(neighborsOfAlice).to.deep.equal([ 
+    expect(neighborsOfAlice).to.deep.equal([
       { user: 'User1', similarity: 0.8528 },
-      { user: 'User2', similarity: 0.7071 } 
+      { user: 'User2', similarity: 0.7071 }
     ]);
 
     expect(recsOfAlice).to.deep.equal([
@@ -46,12 +46,12 @@ describe('<< Practical >>', function(){
 
   });
 
-  
+
   it('UserKNN approach with rank items', function(){
 
-    var userLabels = ['Lisa Rose', 'Gene Seymour', 'Michael Phillips', 
+    var userLabels = ['Lisa Rose', 'Gene Seymour', 'Michael Phillips',
                       'Claudia Puig', 'Mick LaSalle', 'Jack Matthews', 'Toby' ];
-    var itemLabels = ['Lady in the Water', 'Snakes on a Plane', 'Just My Luck', 
+    var itemLabels = ['Lady in the Water', 'Snakes on a Plane', 'Just My Luck',
                       'Superman Returns', 'You, Me and Dupree', 'The Night Listener'];
 
     var ratingMatrix =  [
@@ -81,18 +81,18 @@ describe('<< Practical >>', function(){
     var twoRecsOfToby = model.recommendations('Toby', 2);
     var threeRecsOfToby = model.recommendations('Toby', 3);
 
-    expect(twoNeighborsOfToby).to.deep.equal([ 
+    expect(twoNeighborsOfToby).to.deep.equal([
       { user: 'Lisa Rose', similarity: 0.9912 },
       { user: 'Mick LaSalle', similarity: 0.9245 }
     ]);
 
-    expect(threeNeighborsOfToby).to.deep.equal([ 
+    expect(threeNeighborsOfToby).to.deep.equal([
       { user: 'Lisa Rose', similarity: 0.9912 },
       { user: 'Mick LaSalle', similarity: 0.9245 },
       { user: 'Claudia Puig', similarity: 0.8934 }
     ]);
 
-    expect(fourNeighborsOfToby).to.deep.equal([ 
+    expect(fourNeighborsOfToby).to.deep.equal([
       { user: 'Lisa Rose', similarity: 0.9912 },
       { user: 'Mick LaSalle', similarity: 0.9245 },
       { user: 'Claudia Puig', similarity: 0.8934 },

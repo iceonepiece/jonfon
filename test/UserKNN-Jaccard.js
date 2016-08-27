@@ -7,11 +7,11 @@ var Strategy = jonfon.Strategy;
 describe('<< Practical >>', function(){
 
   var engine = new Engine();
-  var approach = 'UserKNN-Jaccard';
+  var approach = 'UserKNN_Jaccard';
 
   engine.addStrategy(approach, new Strategy(approach));
 
-  it('UserKNN-Jaccard approach', function(){
+  it('UserKNN_Jaccard approach', function(){
 
     var userLabels = ['Alice', 'User1', 'User2', 'User3', 'User4'];
     var itemLabels = ['Item1', 'Item2', 'Item3', 'Item4', 'Item5'];

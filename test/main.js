@@ -62,7 +62,7 @@ describe('<< Engine Class >>', function(){
     var templates = engine.getTemplates();
 
     expect(templates)
-    .to.deep.equal(['UserKNN', 'UserKNN-Jaccard', 'SVD']);
+    .to.deep.equal(['UserKNN', 'UserKNN_Jaccard', 'SVD']);
 
   });
 
@@ -100,10 +100,10 @@ describe('<< Engine Class >>', function(){
     var engine = new Engine();
 
     expect(engine.getModel('sampleData')).to.deep.equal(undefined);
-    
+
     engine.addModel('sampleData', []);
     var model = engine.getModel('sampleData');
-    
+
     expect(model.input).to.deep.equal([]);
     expect(model.output).to.deep.equal({});
     expect(model.rowLabels).to.deep.equal(undefined);
@@ -119,7 +119,7 @@ describe('<< Engine Class >>', function(){
 
     engine.addModel('foo', fooMatrix, fooRowLabels, fooColLabels);
     var model = engine.getModel('foo');
-    
+
     expect(model.input).to.deep.equal([
         [ 1, 2, 3 ],
         [ 4, 5, 6 ]
@@ -128,7 +128,6 @@ describe('<< Engine Class >>', function(){
     expect(model.output).to.deep.equal({});
     expect(model.rowLabels).to.deep.equal([ 'User1', 'User2' ]);
     expect(model.colLabels).to.deep.equal([ 'Item1', 'Item2', 'Item3' ]);
-      
+
   });
 });
-

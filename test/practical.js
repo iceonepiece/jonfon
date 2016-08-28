@@ -28,7 +28,11 @@ describe('<< Practical >>', function(){
 
     engine.addModel('one', ratingMatrix, userLabels, itemLabels);
 
-    engine.process(approach, 'one');
+    var options = {
+      threshold: 0.5
+    };
+
+    engine.process(approach, 'one', options);
 
     var model = engine.getModel('one');
 
@@ -69,9 +73,6 @@ describe('<< Practical >>', function(){
     engine.process(approach, 'one');
 
     var model = engine.getModel('one');
-
-    console.log('model.recommendations');
-    console.log(model.recommendations());
 
     var twoNeighborsOfToby = model.neighbors('Toby', 2);
     var threeNeighborsOfToby = model.neighbors('Toby', 3);

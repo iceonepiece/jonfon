@@ -1,5 +1,5 @@
 
-var Recommender = require('../build/Release/addon');
+var Recommender = require('../index').NewEngine;
 var expect  = require("chai").expect;
 
 var inputMatrix = [

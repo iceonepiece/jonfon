@@ -1,4 +1,4 @@
 # jonfon
-A Very Good Recommendation Engine
+A High-Performance Recommendation Engine for Node.js
 
 This module is in development.

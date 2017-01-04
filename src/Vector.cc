@@ -37,6 +37,10 @@ Vector Vector::operator+(const Vector& X) const{
   return Vector(V);
 }
 
+double Vector::sum(){
+  return std::accumulate(_data.begin(), _data.end(), 0);
+}
+
 Vector Vector::operator*(const double value) const{
   std::vector<double> V(_data.size(), 0.0);
   for( int i = 0; i < _data.size(); i++ ){

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <iomanip>
+#include <numeric>
 #include <time.h>
 #include <math.h>
 #include <vector>
@@ -105,7 +106,72 @@ void Als2(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(result.convertToLocalArray(isolate));
 }
 
+double mean( vector<double>& vect ){
+  double total = 0;
+  for( size_t i = 0; i < vect.size(); i++ ){
+    total += vect[i];
+  }
+
+  return total / vect.size();
+}
+
+void Bm25(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Local<Array> dataset = Local<Array>::Cast(args[0]);
+  Matrix X(dataset);
+
+  const int N = X.rows();
+  double K1 = args[1]->NumberValue();
+  double B = args[2]->NumberValue();
+
+  vector<size_t> xCol;
+  for( int i = 0; i < N; i++ ){
+    for( int j = 0; j < X.cols(); j++ ){
+      if( X(i, j) > 0 ){
+        xCol.push_back(j);
+      }
+    }
+  }
+
+  vector<double> idf(X.cols());
+  for( size_t i = 0; i < idf.size(); i++ ){
+    int num = 0;
+    for( size_t j = 0; j < xCol.size(); j++ ){
+      if( xCol[j] == i ){
+        num += 1;
+      }
+    }
+    idf[i] = log( double(N) / (num + 1) );
+  }
+
+  vector<double> rowSums(N);
+  for( int i = 0; i < N; i++ ){
+    Vector vect = X(i);
+    rowSums[i] = vect.sum();
+  }
+
+  double averageLength = mean(rowSums);
+
+  vector<double> lengthNorm(N);
+  for( int i = 0; i < N; i++ ){
+    lengthNorm[i] = (1.0 - B) + B *  rowSums[i] / averageLength;
+  }
+
+  for( int i = 0; i < N; i++ ){
+    for( int j = 0; j < X.cols(); j++ ){
+      X(i,j) = X(i,j) * (K1 + 1.0) / (K1 * lengthNorm[i] + X(i,j)) * idf[j];
+      if( isnan( X(i,j) ) ){
+        X(i, j) = 0;
+      }
+    }
+  }
+
+  args.GetReturnValue().Set(X.convertToLocalArray(isolate));
+}
+
 void init(Local<Object> exports) {
+  NODE_SET_METHOD(exports, "bm25", Bm25);
   NODE_SET_METHOD(exports, "als", Als);
   NODE_SET_METHOD(exports, "als2", Als2);
 }

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <iostream>
+#include <numeric>
 #include <node.h>
 
 class Vector{
@@ -20,6 +21,8 @@ class Vector{
     double& operator()(const int i) {
       return _data[i];
     }
+
+    double sum();
 
     void print(){
       for( int i = 0; i < size(); i++ ){

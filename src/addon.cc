@@ -189,9 +189,9 @@ void Cosine(const FunctionCallbackInfo<Value>& args) {
     }
   }
 
-  Matrix model(X.rows(), X.cols());
+  Matrix model(X.rows(), X.rows());
   for( size_t i = 0; i < X.rows(); i++ ){
-    for( size_t j = 0; j < X.cols(); j++ ){
+    for( size_t j = 0; j < X.rows(); j++ ){
       model(i, j) = X(i) * X(j);
     }
   }

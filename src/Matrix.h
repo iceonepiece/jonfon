@@ -13,6 +13,7 @@ class Matrix {
     Matrix(const v8::Local<v8::Array>& dataset );
     v8::Local<v8::Array> convertToLocalArray(v8::Isolate* isolate);
 
+    Vector norms();
     void set( int row, Vector v );
 
     // linear solve helper functions

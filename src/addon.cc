@@ -170,10 +170,35 @@ void Bm25(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(X.convertToLocalArray(isolate));
 }
 
+void Cosine(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Matrix X(Local<Array>::Cast(args[0]));
+
+  Vector norms = X.norms();
+
+  for( size_t i = 0; i < X.rows(); i++ ){
+    for( size_t j = 0; j < X.cols(); j++ ){
+      X(i, j) = X(i, j) / norms(i);
+    }
+  }
+
+  Matrix model(X.rows(), X.cols());
+  for( size_t i = 0; i < X.rows(); i++ ){
+    for( size_t j = 0; j < X.cols(); j++ ){
+      model(i, j) = X(i) * X(j);
+    }
+  }
+
+  model.print();
+  args.GetReturnValue().Set(model.convertToLocalArray(isolate));
+}
+
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "bm25", Bm25);
   NODE_SET_METHOD(exports, "als", Als);
   NODE_SET_METHOD(exports, "als2", Als2);
+  NODE_SET_METHOD(exports, "cosine", Cosine);
 }
 
 NODE_MODULE(addon, init)

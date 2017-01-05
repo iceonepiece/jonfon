@@ -5,6 +5,21 @@ Matrix::Matrix(const int rows, const int cols)
   : _rows(rows), _cols(cols), _data(rows * cols, 0.0){
 }
 
+Vector Matrix::norms(){
+
+  Vector norms(_rows);
+
+  for( size_t i = 0; i < _rows; i++ ){
+    double total = 0;
+    for( size_t j = 0; j < _cols; j++ ){
+      total += std::pow(operator()(i,j), 2);
+    }
+    norms(i) = std::sqrt(total);
+  }
+
+  return norms;
+}
+
 void Matrix::multline( Matrix& A, Vector& b, int i, double l ){
 
   b(i) *= l;

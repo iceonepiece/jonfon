@@ -102,8 +102,14 @@ void Als2(const FunctionCallbackInfo<Value>& args) {
     solver(transposeRatingMatrix, Y, X, REGULARIZATION);
   }
 
+  Local<Object> res = Object::New(isolate);
   Matrix result = X * Y.transpose();
-  args.GetReturnValue().Set(result.convertToLocalArray(isolate));
+
+  res->Set(String::NewFromUtf8(isolate, "X"), X.convertToLocalArray(isolate));
+  res->Set(String::NewFromUtf8(isolate, "Y"), Y.convertToLocalArray(isolate));
+  res->Set(String::NewFromUtf8(isolate, "XY"), result.convertToLocalArray(isolate));
+
+  args.GetReturnValue().Set(res);
 }
 
 double mean( vector<double>& vect ){
@@ -190,7 +196,6 @@ void Cosine(const FunctionCallbackInfo<Value>& args) {
     }
   }
 
-  model.print();
   args.GetReturnValue().Set(model.convertToLocalArray(isolate));
 }
 

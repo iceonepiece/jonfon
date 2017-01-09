@@ -202,11 +202,57 @@ void Cosine(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(model.convertToLocalArray(isolate));
 }
 
+double calculateNewJaccard( Vector A, Vector B ) {
+
+  double top = 0;
+  double bot = 0;
+
+  for( size_t i = 0; i < A.size(); i++ ){
+
+    if( A(i) > 0 || B(i) > 0 ){
+      bot += 1;
+    }
+
+    if( A(i) > 0 && B(i) > 0 ){
+      double val = 1;
+
+      if( A(i) != B(i) )
+        val = 0.5;
+
+      top += val;
+    }
+  }
+
+  if( bot == 0 || top == 0 )
+    return 0;
+
+  return top / bot;
+}
+
+void NewJaccard(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Matrix X(Local<Array>::Cast(args[0]));
+
+  Matrix model(X.rows(), X.rows());
+  for( size_t i = 0; i < X.rows(); i++ ){
+    for( size_t j = 0; j < X.rows(); j++ ){
+      if( i == j )
+        model(i, j) = 1;
+      else
+        model(i, j) = calculateNewJaccard( X(i), X(j) );
+    }
+  }
+
+  args.GetReturnValue().Set(model.convertToLocalArray(isolate));
+}
+
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "bm25", Bm25);
   NODE_SET_METHOD(exports, "als", Als);
   NODE_SET_METHOD(exports, "als2", Als2);
   NODE_SET_METHOD(exports, "cosine", Cosine);
+  NODE_SET_METHOD(exports, "newJaccard", NewJaccard);
 }
 
 NODE_MODULE(addon, init)

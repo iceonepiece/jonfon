@@ -186,7 +186,7 @@ void Cosine(const FunctionCallbackInfo<Value>& args) {
   for( size_t i = 0; i < X.rows(); i++ ){
     for( size_t j = 0; j < X.cols(); j++ ){
       X(i, j) = X(i, j) / norms(i);
-      if( isnan( X(i, j) ) ){
+      if( std::isnan( X(i, j) ) ){
         X(i, j) = 0;
       }
     }

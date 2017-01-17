@@ -167,7 +167,7 @@ void Bm25(const FunctionCallbackInfo<Value>& args) {
   for( int i = 0; i < N; i++ ){
     for( int j = 0; j < X.cols(); j++ ){
       X(i,j) = X(i,j) * (K1 + 1.0) / (K1 * lengthNorm[i] + X(i,j)) * idf[j];
-      if( isnan( X(i,j) ) ){
+      if( std::isnan( X(i,j) ) ){
         X(i, j) = 0;
       }
     }

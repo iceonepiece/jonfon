@@ -1,4 +1,3 @@
-
 #include "Matrix.h"
 
 Matrix::Matrix(const int rows, const int cols)
@@ -30,7 +29,7 @@ void Matrix::multline( Matrix& A, Vector& b, int i, double l ){
 
 void Matrix::set( int row, Vector v ){
   int offset = row * _cols;
-  for( int i = 0; i < _cols; i++ ){
+  for(size_t i = 0; i < _cols; i++ ){
     _data[i + offset] = v(i);
   }
 }
@@ -96,15 +95,14 @@ Vector Matrix::solve( Matrix& A, Vector& b){
   return b;
 }
 
-
 Matrix::Matrix(const v8::Local<v8::Array>& dataset){
   _rows = dataset->Length();
   _cols = dataset->Get(0).As<v8::Array>()->Length();
   _data = std::vector<double>(_rows * _cols, 0.0);
 
-  for( int i = 0; i < _rows; i++) {
+  for( size_t i = 0; i < _rows; i++) {
     v8::Local<v8::Array> currentRow = dataset->Get(i).As<v8::Array>();
-    for (int j = 0; j < _cols; j++) {
+    for (size_t j = 0; j < _cols; j++) {
         operator()(i,j) = currentRow->Get(j)->NumberValue();
     }
   }
@@ -113,9 +111,9 @@ Matrix::Matrix(const v8::Local<v8::Array>& dataset){
 v8::Local<v8::Array> Matrix::convertToLocalArray(v8::Isolate* isolate){
   v8::Local<v8::Array> m = v8::Array::New(isolate, _rows);
 
-  for (int i = 0; i < _rows; i++) {
+  for (size_t i = 0; i < _rows; i++) {
     v8::Local<v8::Array> row = v8::Array::New(isolate, _cols);
-    for (int j = 0; j < _cols; j++) {
+    for (size_t j = 0; j < _cols; j++) {
       row->Set(j, v8::Number::New(isolate, operator()(i,j)));
     }
     m->Set(i, row);
@@ -125,8 +123,8 @@ v8::Local<v8::Array> Matrix::convertToLocalArray(v8::Isolate* isolate){
 
 Matrix Matrix::operator+(const Matrix& X) const{
   Matrix M(_rows, _cols);
-  for(int i = 0; i < _rows; i++) {
-    for (int j = 0; j < _cols; j++) {
+  for(size_t i = 0; i < _rows; i++) {
+    for (size_t j = 0; j < _cols; j++) {
       M(i, j) = operator()(i, j) + X(i, j);
     }
   }
@@ -136,10 +134,10 @@ Matrix Matrix::operator+(const Matrix& X) const{
 Matrix Matrix::operator*(const Matrix& X) const{
   Matrix M(_rows, X.cols());
 
-  for( int i = 0; i < _rows; i++ ){
-    for( int j = 0; j < X.cols(); j++ ){
+  for( size_t i = 0; i < _rows; i++ ){
+    for( size_t j = 0; j < X.cols(); j++ ){
       double sum = 0;
-      for( int k = 0; k < _cols; k++ ){
+      for( size_t k = 0; k < _cols; k++ ){
         sum += operator()(i,k) * X(k,j);
       }
       M(i, j) = sum;
@@ -151,8 +149,8 @@ Matrix Matrix::operator*(const Matrix& X) const{
 Matrix Matrix::operator*( double x ) const{
   Matrix M(_rows, _cols);
 
-  for( int i = 0; i < _rows; i++ ){
-    for( int j = 0; j < _cols; j++ ){
+  for( size_t i = 0; i < _rows; i++ ){
+    for( size_t j = 0; j < _cols; j++ ){
       M(i, j) = operator()(i,j) * x;
     }
   }
@@ -161,8 +159,8 @@ Matrix Matrix::operator*( double x ) const{
 
 Matrix Matrix::transpose() const{
   Matrix M(_cols, _rows);
-  for( int i = 0; i < _rows; i++ ){
-    for( int j = 0; j < _cols; j++ ){
+  for( size_t i = 0; i < _rows; i++ ){
+    for( size_t j = 0; j < _cols; j++ ){
       M(j, i) = operator()(i,j);
     }
   }

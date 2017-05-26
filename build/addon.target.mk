@@ -99,7 +99,8 @@ INCS_Release := \
 OBJS := \
 	$(obj).target/$(TARGET)/src/addon.o \
 	$(obj).target/$(TARGET)/src/Matrix.o \
-	$(obj).target/$(TARGET)/src/Vector.o
+	$(obj).target/$(TARGET)/src/Vector.o \
+	$(obj).target/$(TARGET)/src/SparseMatrix.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)

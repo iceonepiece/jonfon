@@ -7,6 +7,7 @@
 #include <math.h>
 #include <vector>
 #include "Vector.h"
+#include "SparseMatrix.h"
 #include "Matrix.h"
 
 using namespace std;
@@ -22,6 +23,8 @@ using v8::Value;
 using v8::Array;
 using v8::Number;
 
+typedef std::unordered_map<int, double> SparseRow;
+
 void solver( Matrix& Cui, Matrix& X, Matrix& Y, double regularization){
 
   int users = X.rows();
@@ -33,7 +36,7 @@ void solver( Matrix& Cui, Matrix& X, Matrix& Y, double regularization){
     Matrix A = YtY + ( Matrix::identity(factors) * regularization );
     Vector b(factors);
 
-    for( int i = 0; i < Cui.cols(); i++ ){
+    for(size_t i = 0; i < Cui.cols(); i++ ){
 
       double confidence = Cui(u,i);
       if(confidence == 0 ){
@@ -127,13 +130,13 @@ void Bm25(const FunctionCallbackInfo<Value>& args) {
   Local<Array> dataset = Local<Array>::Cast(args[0]);
   Matrix X(dataset);
 
-  const int N = X.rows();
+  const unsigned int N = X.rows();
   double K1 = args[1]->NumberValue();
   double B = args[2]->NumberValue();
 
   vector<size_t> xCol;
-  for( int i = 0; i < N; i++ ){
-    for( int j = 0; j < X.cols(); j++ ){
+  for(size_t i = 0; i < N; i++ ){
+    for(size_t j = 0; j < X.cols(); j++ ){
       if( X(i, j) > 0 ){
         xCol.push_back(j);
       }
@@ -152,7 +155,7 @@ void Bm25(const FunctionCallbackInfo<Value>& args) {
   }
 
   vector<double> rowSums(N);
-  for( int i = 0; i < N; i++ ){
+  for( size_t i = 0; i < N; i++ ){
     Vector vect = X(i);
     rowSums[i] = vect.sum();
   }
@@ -160,12 +163,12 @@ void Bm25(const FunctionCallbackInfo<Value>& args) {
   double averageLength = mean(rowSums);
 
   vector<double> lengthNorm(N);
-  for( int i = 0; i < N; i++ ){
+  for( size_t i = 0; i < N; i++ ){
     lengthNorm[i] = (1.0 - B) + B *  rowSums[i] / averageLength;
   }
 
-  for( int i = 0; i < N; i++ ){
-    for( int j = 0; j < X.cols(); j++ ){
+  for( size_t i = 0; i < N; i++ ){
+    for( size_t j = 0; j < X.cols(); j++ ){
       X(i,j) = X(i,j) * (K1 + 1.0) / (K1 * lengthNorm[i] + X(i,j)) * idf[j];
       if( std::isnan( X(i,j) ) ){
         X(i, j) = 0;
@@ -229,6 +232,32 @@ double calculateNewJaccard( Vector A, Vector B ) {
   return top / bot;
 }
 
+double calculateNewJaccard( SparseRow A, SparseRow B ) {
+
+  double same = 0;
+  double top = 0;
+
+  for( auto aIter = A.begin(); aIter != A.end(); ++aIter ){
+    auto bIter = B.find(aIter->first);
+
+    if( bIter != B.end() ){
+      same += 1;
+      double val = 1;
+      if( aIter->second != bIter->second )
+        val = 0.5;
+      top += val;
+    }
+  }
+
+  double bot = A.size() + B.size() - same;
+
+  if( bot == 0 || top == 0 )
+    return 0;
+
+  return top / bot;
+}
+
+
 void NewJaccard(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
 
@@ -249,12 +278,37 @@ void NewJaccard(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(model.convertToLocalArray(isolate));
 }
 
+
+void NewJaccard2(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  SparseMatrix X(Local<Array>::Cast(args[0]));
+
+  Matrix model(X.rows(), X.rows());
+
+  for( size_t i = 0; i < X.rows(); i++ ){
+    for( size_t j = i; j < X.rows(); j++ ){
+      if(i == j) model(i, j) = 1;
+      else{
+        cout << "row: " << i << " - " << "col: " << j << endl;
+        double similarity = calculateNewJaccard( X(i), X(j) );
+        model(i, j) = similarity;
+        model(j, i) = similarity;
+      }
+    }
+  }
+
+  args.GetReturnValue().Set(model.convertToLocalArray(isolate));
+}
+
+
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "bm25", Bm25);
   NODE_SET_METHOD(exports, "als", Als);
   NODE_SET_METHOD(exports, "als2", Als2);
   NODE_SET_METHOD(exports, "cosine", Cosine);
   NODE_SET_METHOD(exports, "newJaccard", NewJaccard);
+  NODE_SET_METHOD(exports, "newJaccard2", NewJaccard2);
 }
 
 NODE_MODULE(addon, init)

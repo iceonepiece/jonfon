@@ -5,7 +5,7 @@ Release/obj.target/addon/src/addon.o: ../src/addon.cc \
   /Users/iceonepiece/.node-gyp/7.10.0/include/node/v8-version.h \
   /Users/iceonepiece/.node-gyp/7.10.0/include/node/v8config.h \
   /Users/iceonepiece/.node-gyp/7.10.0/include/node/node_version.h \
-  ../src/Vector.h ../src/Matrix.h
+  ../src/Vector.h ../src/SparseMatrix.h ../src/Matrix.h
 ../src/addon.cc:
 /Users/iceonepiece/.node-gyp/7.10.0/include/node/node.h:
 /Users/iceonepiece/.node-gyp/7.10.0/include/node/v8.h:
@@ -13,4 +13,5 @@ Release/obj.target/addon/src/addon.o: ../src/addon.cc \
 /Users/iceonepiece/.node-gyp/7.10.0/include/node/v8config.h:
 /Users/iceonepiece/.node-gyp/7.10.0/include/node/node_version.h:
 ../src/Vector.h:
+../src/SparseMatrix.h:
 ../src/Matrix.h:

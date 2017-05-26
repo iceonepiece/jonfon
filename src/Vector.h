@@ -25,7 +25,7 @@ class Vector{
     double sum();
 
     void print(){
-      for( int i = 0; i < size(); i++ ){
+      for( size_t i = 0; i < size(); i++ ){
         std::cout << " " << _data[i];
       }
       std::cout << std::endl;
@@ -37,7 +37,7 @@ class Vector{
 
     double operator*(const Vector& X) const;
 
-    int size() const{
+    unsigned int size() const{
       return _data.size();
     }
 

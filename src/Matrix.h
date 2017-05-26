@@ -30,10 +30,10 @@ class Matrix {
       return M;
     }
 
-    static Matrix random(const int rows, const int cols){
+    static Matrix random(const unsigned int rows, const unsigned int cols){
       Matrix M(rows, cols);
-      for( int i = 0; i < rows; i++ ){
-        for( int j = 0; j < cols; j++ ){
+      for( size_t i = 0; i < rows; i++ ){
+        for( size_t j = 0; j < cols; j++ ){
           double val = (rand() % 100) / 100.0;
           M(i,j) = val;
         }
@@ -42,8 +42,8 @@ class Matrix {
     }
 
     void print(){
-      for( int i = 0; i < _rows; i++ ){
-        for( int j = 0; j < _cols; j++ ){
+      for( size_t i = 0; i < _rows; i++ ){
+        for( size_t j = 0; j < _cols; j++ ){
           std::cout << " " << operator()(i,j);
         }
         std::cout << std::endl;
@@ -52,22 +52,22 @@ class Matrix {
     }
 
     static Matrix outer( const Vector& a, const Vector& b ){
-      int nA = a.size();
-      int nB = b.size();
+      unsigned int nA = a.size();
+      unsigned int nB = b.size();
       Matrix M(nA, nB);
-      for( int i = 0; i < nA; i++ ){
-        for( int j = 0; j < nB; j++ ){
+      for( size_t i = 0; i < nA; i++ ){
+        for( size_t j = 0; j < nB; j++ ){
           M(i,j) = a(i) * b(j);
         }
       }
       return M;
     }
 
-    int rows() const{
+    unsigned int rows() const{
       return _rows;
     }
 
-    int cols() const{
+    unsigned int cols() const{
       return _cols;
     }
 
@@ -92,8 +92,8 @@ class Matrix {
     Matrix operator*(double x) const;
 
   private:
-    int _rows;
-    int _cols;
+    unsigned int _rows;
+    unsigned int _cols;
     std::vector<double> _data;
 
     int index(const int r, const int c) const {

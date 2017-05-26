@@ -22,7 +22,7 @@ Vector::Vector(const v8::Local<v8::Array>& vect){
 v8::Local<v8::Array> Vector::convertToLocalArray(v8::Isolate* isolate){
   v8::Local<v8::Array> m = v8::Array::New(isolate, _data.size());
 
-  for (int i = 0; i < _data.size(); i++) {
+  for (size_t i = 0; i < _data.size(); i++) {
     m->Set(i, v8::Number::New(isolate, _data[i]));
   }
   return m;
@@ -43,7 +43,7 @@ double Vector::sum(){
 
 Vector Vector::operator*(const double value) const{
   std::vector<double> V(_data.size(), 0.0);
-  for( int i = 0; i < _data.size(); i++ ){
+  for(size_t i = 0; i < _data.size(); i++ ){
     V[i] = operator()(i) * value;
   }
   return Vector(V);
@@ -51,7 +51,7 @@ Vector Vector::operator*(const double value) const{
 
 double Vector::operator*(const Vector& X) const{
   double sum = 0;
-  for( int i = 0; i < _data.size(); i++ ){
+  for(size_t i = 0; i < _data.size(); i++ ){
     sum += operator()(i) * X(i);
   }
   return sum;

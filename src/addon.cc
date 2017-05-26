@@ -290,7 +290,6 @@ void NewJaccard2(const FunctionCallbackInfo<Value>& args) {
     for( size_t j = i; j < X.rows(); j++ ){
       if(i == j) model(i, j) = 1;
       else{
-        cout << "row: " << i << " - " << "col: " << j << endl;
         double similarity = calculateNewJaccard( X(i), X(j) );
         model(i, j) = similarity;
         model(j, i) = similarity;

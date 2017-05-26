@@ -32,6 +32,7 @@ CFLAGS_C_Debug := \
 # Flags passed to only C++ files.
 CFLAGS_CC_Debug := \
 	-std=gnu++0x \
+	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
 	-fno-threadsafe-statics \
@@ -44,10 +45,10 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/include/node \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/src \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/deps/uv/include \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/deps/v8/include
+	-I/Users/iceonepiece/.node-gyp/7.10.0/include/node \
+	-I/Users/iceonepiece/.node-gyp/7.10.0/src \
+	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/uv/include \
+	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/v8/include
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=addon' \
@@ -77,6 +78,7 @@ CFLAGS_C_Release := \
 # Flags passed to only C++ files.
 CFLAGS_CC_Release := \
 	-std=gnu++0x \
+	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
 	-fno-threadsafe-statics \
@@ -89,10 +91,10 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/include/node \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/src \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/deps/uv/include \
-	-I/Users/iceonepiece/.node-gyp/6.2.0/deps/v8/include
+	-I/Users/iceonepiece/.node-gyp/7.10.0/include/node \
+	-I/Users/iceonepiece/.node-gyp/7.10.0/src \
+	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/uv/include \
+	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/v8/include
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/addon.o \
@@ -131,7 +133,8 @@ LDFLAGS_Debug := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.7 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-stdlib=libc++
 
 LIBTOOLFLAGS_Debug := \
 	-undefined dynamic_lookup \
@@ -144,7 +147,8 @@ LDFLAGS_Release := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.7 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-stdlib=libc++
 
 LIBTOOLFLAGS_Release := \
 	-undefined dynamic_lookup \

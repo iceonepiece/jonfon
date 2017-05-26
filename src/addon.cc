@@ -236,11 +236,13 @@ void NewJaccard(const FunctionCallbackInfo<Value>& args) {
 
   Matrix model(X.rows(), X.rows());
   for( size_t i = 0; i < X.rows(); i++ ){
-    for( size_t j = 0; j < X.rows(); j++ ){
-      if( i == j )
-        model(i, j) = 1;
-      else
-        model(i, j) = calculateNewJaccard( X(i), X(j) );
+    for( size_t j = i; j < X.rows(); j++ ){
+      if( i == j )model(i, j) = 1;
+      else{
+        double similarity = calculateNewJaccard( X(i), X(j) );
+        model(i, j) = similarity;
+        model(j, i) = similarity;
+      }
     }
   }
 

@@ -12,7 +12,8 @@ DEFS_Debug := \
 	'-D_FILE_OFFSET_BITS=64' \
 	'-DBUILDING_NODE_EXTENSION' \
 	'-DDEBUG' \
-	'-D_DEBUG'
+	'-D_DEBUG' \
+	'-DV8_ENABLE_CHECKS'
 
 # Flags passed to all source files.
 CFLAGS_Debug := \
@@ -45,10 +46,10 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/include/node \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/src \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/uv/include \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/v8/include
+	-I/Users/iceonepiece/.node-gyp/8.0.0/include/node \
+	-I/Users/iceonepiece/.node-gyp/8.0.0/src \
+	-I/Users/iceonepiece/.node-gyp/8.0.0/deps/uv/include \
+	-I/Users/iceonepiece/.node-gyp/8.0.0/deps/v8/include
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=addon' \
@@ -91,16 +92,17 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/include/node \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/src \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/uv/include \
-	-I/Users/iceonepiece/.node-gyp/7.10.0/deps/v8/include
+	-I/Users/iceonepiece/.node-gyp/8.0.0/include/node \
+	-I/Users/iceonepiece/.node-gyp/8.0.0/src \
+	-I/Users/iceonepiece/.node-gyp/8.0.0/deps/uv/include \
+	-I/Users/iceonepiece/.node-gyp/8.0.0/deps/v8/include
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/addon.o \
 	$(obj).target/$(TARGET)/src/Matrix.o \
 	$(obj).target/$(TARGET)/src/Vector.o \
-	$(obj).target/$(TARGET)/src/SparseMatrix.o
+	$(obj).target/$(TARGET)/src/SparseMatrix.o \
+	$(obj).target/$(TARGET)/src/CsrMatrix.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)

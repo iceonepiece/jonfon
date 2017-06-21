@@ -6,7 +6,8 @@
         "./src/addon.cc",
         "./src/Matrix.cc",
         "./src/Vector.cc",
-        "./src/SparseMatrix.cc"
+        "./src/SparseMatrix.cc",
+        "./src/CsrMatrix.cc",
       ],
     }
   ]

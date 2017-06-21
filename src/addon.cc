@@ -1,6 +1,7 @@
 #include <node.h>
 #include <stdlib.h>
 #include <iostream>
+#include <tuple>
 #include <iomanip>
 #include <numeric>
 #include <time.h>
@@ -9,6 +10,7 @@
 #include "Vector.h"
 #include "SparseMatrix.h"
 #include "Matrix.h"
+#include "CsrMatrix.h"
 
 using namespace std;
 
@@ -24,6 +26,31 @@ using v8::Array;
 using v8::Number;
 
 typedef std::unordered_map<int, double> SparseRow;
+
+void newSolver( CsrMatrix& Cui, Matrix& X, Matrix& Y, double regularization){
+
+  int users = X.rows();
+  int factors = X.cols();
+  Matrix YtY = Y.transpose() * Y;
+
+  for( int u = 0; u < users; u++ ){
+    Matrix A = YtY + ( Matrix::identity(factors) * regularization );
+    Vector b(factors);
+
+    vector< tuple<size_t, double> > thisRow = Cui.get(u);
+
+    for(size_t i = 0; i < thisRow.size(); i++ ){
+      size_t colIndex = get<0>(thisRow[i]);
+      double confidence = get<1>(thisRow[i]);
+
+      Vector factor = Y(colIndex);
+      A = A + ( Matrix::outer(factor, factor) * (confidence - 1) );
+      b = b + ( factor * confidence );
+    }
+    X.set(u, Matrix::solve(A, b));
+
+  }
+}
 
 void solver( Matrix& Cui, Matrix& X, Matrix& Y, double regularization){
 
@@ -300,6 +327,80 @@ void NewJaccard2(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(model.convertToLocalArray(isolate));
 }
 
+void csrTranpose(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Local<Object> dataset = Local<Object>::Cast(args[0]);
+
+  CsrMatrix X(dataset, isolate);
+  CsrMatrix Xt = X.transpose();
+
+  args.GetReturnValue().Set(Xt.convertToLocalArray(isolate));
+}
+
+void testCsr(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Local<Object> dataset = Local<Object>::Cast(args[0]);
+  Local<Array> P = Local<Array>::Cast(args[1]);
+  Local<Array> Q = Local<Array>::Cast(args[2]);
+
+  double regularization = args[3]->NumberValue();
+  int iterations = args[4]->IntegerValue();
+
+  Matrix X(P);
+  Matrix Y(Q);
+  CsrMatrix Cui(dataset, isolate);
+  CsrMatrix Ciu = Cui.transpose();
+
+  for( int i = 0; i < iterations; i++ ){
+    newSolver(Cui, X, Y, regularization);
+    newSolver(Ciu, Y, X, regularization);
+  }
+
+  Matrix result = X * Y.transpose();
+  args.GetReturnValue().Set(result.convertToLocalArray(isolate));
+}
+
+void newAls(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Local<Object> dataset = Local<Object>::Cast(args[0]);
+  CsrMatrix ratingMatrix(dataset, isolate);
+  size_t rows = ratingMatrix.rows();
+  size_t cols = ratingMatrix.cols();
+
+  double ALPHA = args[1]->NumberValue();
+  int FACTORS = args[2]->IntegerValue();
+  double REGULARIZATION = args[3]->NumberValue();
+  int ITERATIONS = args[4]->IntegerValue();
+
+  if( args[5]->IsNumber() ){
+    srand(args[5]->IntegerValue());
+  } else{
+    srand(time(NULL));
+  }
+
+  //ratingMatrix = ratingMatrix * ALPHA;
+  Matrix X = Matrix::random(rows, FACTORS);
+  Matrix Y = Matrix::random(cols, FACTORS);
+
+  CsrMatrix tRatingMatrix = ratingMatrix.transpose();
+
+  for( int i = 0; i < ITERATIONS; i++ ){
+    newSolver(ratingMatrix, X, Y, REGULARIZATION);
+    newSolver(tRatingMatrix, Y, X, REGULARIZATION);
+  }
+
+  Local<Object> res = Object::New(isolate);
+  Matrix result = X * Y.transpose();
+
+  res->Set(String::NewFromUtf8(isolate, "X"), X.convertToLocalArray(isolate));
+  res->Set(String::NewFromUtf8(isolate, "Y"), Y.convertToLocalArray(isolate));
+  res->Set(String::NewFromUtf8(isolate, "XY"), result.convertToLocalArray(isolate));
+
+  args.GetReturnValue().Set(res);
+}
 
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "bm25", Bm25);
@@ -308,6 +409,10 @@ void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "cosine", Cosine);
   NODE_SET_METHOD(exports, "newJaccard", NewJaccard);
   NODE_SET_METHOD(exports, "newJaccard2", NewJaccard2);
+
+  NODE_SET_METHOD(exports, "newAls", newAls);
+  NODE_SET_METHOD(exports, "testCsr", testCsr);
+  NODE_SET_METHOD(exports, "csrTranpose", csrTranpose);
 }
 
 NODE_MODULE(addon, init)

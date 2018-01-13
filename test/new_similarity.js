@@ -1,8 +1,5 @@
-
-
-var Recommender = require('../index').NewEngine;
-var expect  = require("chai").expect;
-
+const Recommender = require('../index').NewEngine;
+const expect  = require("chai").expect;
 
 describe('<< New Engine Similarity >>', function(){
 
@@ -14,12 +11,22 @@ describe('<< New Engine Similarity >>', function(){
       [ 1, 1, 2, 3 ]
     ]
 
-    var model = Recommender.cosine(cosinePrefs);
+    const model = Recommender.cosine(cosinePrefs);
     expect(model[1][0].toFixed(4)).to.equal('0.9562');
     expect(model[1][1].toFixed(4)).to.equal('1.0000');
     expect(model[1][2].toFixed(4)).to.equal('0.7894');
     expect(model[1][3].toFixed(4)).to.equal('0.6351');
+  });
 
+  it('calculateJaccard()', () => {
+    const A = [ 1, 0, 1 ];
+    const B = [ 1, 0, 2 ];
+    const C = [ 0, 0, 0 ];
+    const D = [ 1, 1, 1 ];
+
+    expect(Recommender.calculateJaccard(A, B)).to.deep.equal({ top: 1.5, bot: 2 });
+    expect(Recommender.calculateJaccard(A, C)).to.deep.equal({ top: 0, bot: 2 });
+    expect(Recommender.calculateJaccard(A, D)).to.deep.equal({ top: 2, bot: 3 });
   });
 
   it('newJaccard()', function(){
@@ -32,10 +39,7 @@ describe('<< New Engine Similarity >>', function(){
       [ 2, 2, 2 ]
     ];
 
-    var model = Recommender.newJaccard(testPrefs);
-
-    console.log(model);
-
+    const model = Recommender.newJaccard(testPrefs);
     expect(model[0][1].toFixed(4)).to.equal('0.7500');
     expect(model[0][2].toFixed(4)).to.equal('1.0000');
     expect(model[0][3].toFixed(4)).to.equal('0.0000');
@@ -53,16 +57,11 @@ describe('<< New Engine Similarity >>', function(){
       [ 2, 2, 2 ]
     ];
 
-    var model = Recommender.newJaccard2(testPrefs);
-
-    console.log(model);
-
+    const model = Recommender.newJaccard2(testPrefs);
     expect(model[0][1].toFixed(4)).to.equal('0.7500');
     expect(model[0][2].toFixed(4)).to.equal('1.0000');
     expect(model[0][3].toFixed(4)).to.equal('0.0000');
     expect(model[0][4].toFixed(4)).to.equal('0.6667');
     expect(model[4][5].toFixed(4)).to.equal('0.5000');
   });
-
-
 });

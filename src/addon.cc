@@ -259,6 +259,34 @@ double calculateNewJaccard( Vector A, Vector B ) {
   return top / bot;
 }
 
+void calculateJaccard(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Vector A(Local<Array>::Cast(args[0]));
+  Vector B(Local<Array>::Cast(args[1]));
+
+  double top = 0;
+  double bot = 0;
+
+  for (size_t i = 0; i < A.size(); i++) {
+    if (A(i) > 0 || B(i) > 0) {
+      bot += 1;
+    }
+
+    if (A(i) > 0 && B(i) > 0) {
+      double val = 1;
+      if (A(i) != B(i))
+        val = 0.5;
+      top += val;
+    }
+  }
+
+  Local<Object> res = Object::New(isolate);
+  res->Set(String::NewFromUtf8(isolate, "top"), Number::New(isolate, top));
+  res->Set(String::NewFromUtf8(isolate, "bot"), Number::New(isolate, bot));
+  args.GetReturnValue().Set(res);
+}
+
 double calculateNewJaccard( SparseRow A, SparseRow B ) {
 
   double same = 0;
@@ -409,6 +437,7 @@ void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "cosine", Cosine);
   NODE_SET_METHOD(exports, "newJaccard", NewJaccard);
   NODE_SET_METHOD(exports, "newJaccard2", NewJaccard2);
+  NODE_SET_METHOD(exports, "calculateJaccard", calculateJaccard);
 
   NODE_SET_METHOD(exports, "newAls", newAls);
   NODE_SET_METHOD(exports, "testCsr", testCsr);

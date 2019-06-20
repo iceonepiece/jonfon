@@ -46,9 +46,7 @@ describe('CSR Matrix', function(){
     toSendSparseMatrix.rows = sparseMatrix.rows();
     toSendSparseMatrix.cols = sparseMatrix.cols();
 
-    console.time('Build');
     const model = Recommender.testCsr(toSendSparseMatrix, p, q, REGULARIZATION, ITERATIONS);
-    console.timeEnd('Build');
 
     for( var i = 0; i < ROWS; i++ ){
       for( var j = 0; j < COLS; j++ ){

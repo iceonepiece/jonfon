@@ -40,9 +40,7 @@ describe('Alternating Least Squares', function(){
     const REGULARIZATION = 0.1;
     const ITERATIONS = 50;
 
-    console.time("Build");
     var model = Recommender.als(inputMatrix, p, q, REGULARIZATION, ITERATIONS);
-    console.timeEnd("Build");
 
     for( var i = 0; i < ROWS; i++ ){
       for( var j = 0; j < COLS; j++ ){

@@ -36,8 +36,6 @@ describe('<< Practical >>', function(){
 
     var neighborsOfAlice = model.neighbors('Alice');
     var recsOfAlice = model.recommendations('Alice');
-    console.log( 'Jaccard:', neighborsOfAlice );
-    console.log( 'Jaccard:', recsOfAlice );
 
     expect(neighborsOfAlice).to.deep.equal([
       { user: 'User4', similarity: 0.6667 },
